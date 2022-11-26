@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>CardChecker</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.8/dist/vue.js"></script>
+</head>
+<body>
+    <div class="card" id="app">
+
+        <!-- Здесь будет выводиться ЛОГОТИП БАНКА -->
+        <div class="bank">
+            <img v-bind:src="BankPng">
+        </div>
+
+        <!-- Поле для ввода НОМЕРА КАРТЫ -->
+        <div class="number-container">
+            <input type="text" placeholder="Номер карты" v-model="number" :class="{'input-ok':CorectLen, 'input-err':!CorectLen}">
+            <div class="status" :class="{'status-ok':CorectLen, 'status-err':!CorectLen}"></div>
+        </div>
+
+        <!-- Поле для ввода ИМЕНИ ДЕРЖАТЕЛЯ -->
+        <div class="name-container">
+            <input type="text" placeholder="Имя держателя" v-model="Name" :class="{'input-ok':ValidName, 'input-err':!ValidName}">
+            <div class="status" :class="{'status-ok':ValidName, 'status-err':!ValidName}"></div>
+        </div>
+
+        <!-- Логотип ПЛАТЕЖНОЙ СИСТЕМЫ -->
+        <div class="pay-system">
+            <img v-bind:src="paySystemPng">
+        </div>
+
+    </div>
+    <script>
+        const app = new Vue({
+            el: '#app',
+            data:{
+                number:'',
+                Name:'',
+                class_active: false,
+            },
+
+            computed:{
+                paySystemPng(){
+                    path = 'img/systems/'
+                    var Systems = {
+                        '2': path + 'mir.png',
+                        '3': path + 'american-exp.png',
+                        '4': path + 'visa.png',
+                        '5': path + 'mastercard.png',
+                        '6': path + 'maestro.png',
+                    }
+                    return Systems[this.number[0]]
+                },
+
+                BankPng(){
+                    path_b = 'img/banks/'
+                    var Banks = {
+                        '521178': path_b + 'alpha.png',
+                        '548673': path_b + 'alpha.png',
+                        '548601': path_b + 'alpha.png',
+                        '415428': path_b + 'alpha.png',
+                        '477964': path_b + 'alpha.png',
+                        '479004': path_b + 'alpha.png',
+                        '676371': path_b + 'alpha.png',
+
+                        '427229': path_b + 'vtb.png',
+                        '527883': path_b + 'vtb.png',
+                        '447520': path_b + 'vtb.png',
+                    }
+                    return Banks[this.number.substring(0, 6)]
+                },
+
+                CorectLen(){
+                    k = 0;
+                    for (i = this.number.length; i > 0; i--){
+                        if(i % 2 != 0){
+                            ch = this.number[i]*2
+                            if(ch.length == 2){
+                                k += ch[0]+ch[1]
+                            }
+                            k += this.number[i]*2
+                        }
+                    }
+
+                    if(k % 10 && this.number.length == 16){
+                        return true 
+                    }
+
+                    return false
+                },
+
+                ValidName(){
+                    alf = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ '
+                    for (i = 0; i < this.Name.length; i++){
+                        if(alf.indexOf(this.Name[i]) == -1){
+                            return false
+                        }
+                    }
+                    return true
+                }
+            }
+        })
+    </script>
+</body>
+</html>
